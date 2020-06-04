@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LocationRequest;
 use App\Model\Location;
+use App\Vehiculo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 class LocationController extends Controller
@@ -19,13 +21,17 @@ class LocationController extends Controller
 
         if ($request->ajax()) {
             $data = Location::all();
-
+      
             return response()->json($data, 200);
         } else {
             $uri = Route::current()->uri;
-
-            return view('create-location', compact('uri'));
+            $puntos = Location::get()->load(['vehiculo'=>function($q){
+                return $q->with('user');
+              }]);
+           
+            return view('welcome', compact('uri','puntos'));
         }
+
     }
 
 
@@ -48,11 +54,22 @@ class LocationController extends Controller
      */
     public function store(LocationRequest $request)
     {
+        $vehiculo= Vehiculo::create([
+            'modelo' => $request['name'],
+            'color' => $request['color'],
+            'placa' => $request['placa'],
+            'anio' => $request['anio'],
+            'capacidad' => $request['capacidad'],
+            'estado' => $request['estado'],
+            'user_id'=> Auth::user()->id
+           ]);
            $data = Location::create([
                'name' => $request['name'],
                'lat' => $request['lat'],
-               'lng' => $request['lng']
+               'lng' => $request['lng'],
+               'vehiculo_id' => $vehiculo->id
            ]);
+          
 
         return response()->json($data, 201);
     }

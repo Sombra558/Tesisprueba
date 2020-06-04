@@ -20,6 +20,8 @@ class CreateLocationsTable extends Migration
             $table->string('lat');
             $table->string('lng');
             $table->string('type')->nullable();
+            $table->unsignedInteger('vehiculo_id')->nullable();
+            $table->foreign('vehiculo_id')->references('id')->on('vehiculos')->onDelete('CASCADE');
             $table->timestamps();
         });
     }

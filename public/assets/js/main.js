@@ -100,7 +100,7 @@ function createMap(myLatLng) {
 
 $('#form-create').submit(function(e){
     e.preventDefault();
-    var url = $('meta[name="uri"]').attr('content'); // llama a la url global que se encuantra en el head -> meta
+    var url = 'location'; // llama a la url global que se encuantra en el head -> meta
     var token = $('#token-create').val();
     $('#btn-create').css('display','none');                  //oculto boton guardar
     $('#btn-preload-create').css('display','inline-block');  //mostrar preload
@@ -120,7 +120,7 @@ $('#form-create').submit(function(e){
             window.scrollTo(0,0);
             ClearForm();                                               // borrar datos formulario
             ClearFormError();                                          // borrar alerts error en formulario
-
+            window.location.reload();
         },
         error: function (error) {
             $.each( error.responseJSON.errors, function( key, value ) {
